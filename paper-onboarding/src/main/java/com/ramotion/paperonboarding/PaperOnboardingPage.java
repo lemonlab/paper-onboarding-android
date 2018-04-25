@@ -1,5 +1,7 @@
 package com.ramotion.paperonboarding;
 
+import android.graphics.Typeface;
+
 import java.io.Serializable;
 
 /**
@@ -8,20 +10,38 @@ import java.io.Serializable;
 public class PaperOnboardingPage implements Serializable {
 
     private String titleText;
+    private int titleColor;
     private String descriptionText;
+    private int descriptionColor;
     private int bgColor;
     private int contentIconRes;
     private int bottomBarIconRes;
+    private Typeface textFont;
+    private Typeface descriptionFont;
 
     public PaperOnboardingPage() {
     }
 
-    public PaperOnboardingPage(String titleText, String descriptionText, int bgColor, int contentIconRes, int bottomBarIconRes) {
-        this.bgColor = bgColor;
+    public PaperOnboardingPage(
+            int contentIconRes,
+            String titleText,
+            String descriptionText,
+            int bottomBarIconRes,
+            int bgColor,
+            int titleColor,
+            int descriptionColor,
+            Typeface textFont,
+            Typeface descriptionFont
+    ) {
         this.contentIconRes = contentIconRes;
-        this.bottomBarIconRes = bottomBarIconRes;
-        this.descriptionText = descriptionText;
         this.titleText = titleText;
+        this.descriptionText = descriptionText;
+        this.bottomBarIconRes = bottomBarIconRes;
+        this.bgColor = bgColor;
+        this.titleColor = titleColor;
+        this.descriptionColor = descriptionColor;
+        this.textFont = textFont;
+        this.descriptionFont = descriptionFont;
     }
 
     public String getTitleText() {
@@ -30,6 +50,38 @@ public class PaperOnboardingPage implements Serializable {
 
     public void setTitleText(String titleText) {
         this.titleText = titleText;
+    }
+
+    public int getTitleColor() {
+        return titleColor;
+    }
+
+    public void setTitleColor(int titleColor) {
+        this.titleColor = titleColor;
+    }
+
+    public int getDescriptionColor() {
+        return descriptionColor;
+    }
+
+    public void setDescriptionColor(int descriptionColor) {
+        this.descriptionColor = descriptionColor;
+    }
+
+    public Typeface getTextFont() {
+        return textFont;
+    }
+
+    public void setTextFont(Typeface textFont) {
+        this.textFont = textFont;
+    }
+
+    public Typeface getDescriptionFont() {
+        return descriptionFont;
+    }
+
+    public void setDescriptionFont(Typeface descriptionFont) {
+        this.descriptionFont = descriptionFont;
     }
 
     public String getDescriptionText() {
