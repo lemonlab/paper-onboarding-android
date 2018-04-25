@@ -35,35 +35,35 @@ import java.util.ArrayList;
 public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
 
     // scale factor for converting dp to px
-    private final float dpToPixelsScaleFactor;
+    protected final float dpToPixelsScaleFactor;
 
     // main layout parts
-    private final RelativeLayout mRootLayout;
-    private final FrameLayout mContentTextContainer;
-    private final FrameLayout mContentIconContainer;
-    private final FrameLayout mBackgroundContainer;
-    private final LinearLayout mPagerIconsContainer;
+    protected final RelativeLayout mRootLayout;
+    protected final FrameLayout mContentTextContainer;
+    protected final FrameLayout mContentIconContainer;
+    protected final FrameLayout mBackgroundContainer;
+    protected final LinearLayout mPagerIconsContainer;
 
-    private final RelativeLayout mContentRootLayout;
-    private final LinearLayout mContentCenteredContainer;
+    protected final RelativeLayout mContentRootLayout;
+    protected final LinearLayout mContentCenteredContainer;
 
-    // application context
-    private final Context mAppContext;
+    // activity context
+    protected final Context context;
 
     // state variables
-    private ArrayList<PaperOnboardingPage> mElements = new ArrayList<>();
-    private int mActiveElementIndex = 0;
+    protected ArrayList<PaperOnboardingPage> mElements = new ArrayList<>();
+    protected int mActiveElementIndex = 0;
 
     // params for Pager position calculations, virtually final, but initializes in onGlobalLayoutListener
-    private int mPagerElementActiveSize;
-    private int mPagerElementNormalSize;
-    private int mPagerElementLeftMargin;
-    private int mPagerElementRightMargin;
+    protected int mPagerElementActiveSize;
+    protected int mPagerElementNormalSize;
+    protected int mPagerElementLeftMargin;
+    protected int mPagerElementRightMargin;
 
     // Listeners
-    private PaperOnboardingOnChangeListener mOnChangeListener;
-    private PaperOnboardingOnRightOutListener mOnRightOutListener;
-    private PaperOnboardingOnLeftOutListener mOnLeftOutListener;
+    protected PaperOnboardingOnChangeListener mOnChangeListener;
+    protected PaperOnboardingOnRightOutListener mOnRightOutListener;
+    protected PaperOnboardingOnLeftOutListener mOnLeftOutListener;
 
     /**
      * Main constructor for create a Paper Onboarding Engine
@@ -77,7 +77,7 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
             throw new IllegalArgumentException("No content elements provided");
 
         this.mElements.addAll(contentElements);
-        this.mAppContext = appContext.getApplicationContext();
+        this.context = appContext;
 
         mRootLayout = (RelativeLayout) rootLayout;
         mContentTextContainer = (FrameLayout) rootLayout.findViewById(R.id.onboardingContentTextContainer);
@@ -88,11 +88,11 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
         mContentRootLayout = (RelativeLayout) mRootLayout.getChildAt(1);
         mContentCenteredContainer = (LinearLayout) mContentRootLayout.getChildAt(0);
 
-        this.dpToPixelsScaleFactor = this.mAppContext.getResources().getDisplayMetrics().density;
+        this.dpToPixelsScaleFactor = this.context.getResources().getDisplayMetrics().density;
 
         initializeStartingState();
 
-        mRootLayout.setOnTouchListener(new OnSwipeListener(mAppContext) {
+        mRootLayout.setOnTouchListener(new OnSwipeListener(context) {
             @Override
             public void onSwipeLeft() {
                 toggleContent(false);
@@ -256,7 +256,7 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
      * @return animator set with background color circular reveal animation
      */
     protected AnimatorSet createBGAnimatorSet(final int color) {
-        final View bgColorView = new ImageView(mAppContext);
+        final View bgColorView = new ImageView(context);
         bgColorView.setLayoutParams(new RelativeLayout.LayoutParams(mRootLayout.getWidth(), mRootLayout.getHeight()));
         bgColorView.setBackgroundColor(color);
         mBackgroundContainer.addView(bgColorView);
@@ -441,7 +441,7 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
      */
     @SuppressWarnings("SuspiciousNameCombination")
     protected ViewGroup createPagerIconElement(int iconDrawableRes, boolean isActive) {
-        LayoutInflater vi = LayoutInflater.from(mAppContext);
+        LayoutInflater vi = LayoutInflater.from(context);
         FrameLayout bottomBarElement = (FrameLayout) vi.inflate(R.layout.onboarding_pager_layout, mPagerIconsContainer, false);
         ImageView elementShape = (ImageView) bottomBarElement.getChildAt(0);
         ImageView elementIcon = (ImageView) bottomBarElement.getChildAt(1);
@@ -464,7 +464,7 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
      * @return configured view with new content texts
      */
     protected ViewGroup createContentTextView(PaperOnboardingPage PaperOnboardingPage) {
-        LayoutInflater vi = LayoutInflater.from(mAppContext);
+        LayoutInflater vi = LayoutInflater.from(context);
         ViewGroup contentTextView = (ViewGroup) vi.inflate(R.layout.onboarding_text_content_layout, mContentTextContainer, false);
         TextView contentTitle = (TextView) contentTextView.getChildAt(0);
         contentTitle.setText(PaperOnboardingPage.getTitleText());
@@ -478,7 +478,7 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
      * @return configured view with new content image
      */
     protected ImageView createContentIconView(PaperOnboardingPage PaperOnboardingPage) {
-        ImageView contentIcon = new ImageView(mAppContext);
+        ImageView contentIcon = new ImageView(context);
         contentIcon.setImageResource(PaperOnboardingPage.getContentIconRes());
         FrameLayout.LayoutParams iconLP = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         iconLP.gravity = Gravity.CENTER;
