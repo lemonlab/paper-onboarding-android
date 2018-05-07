@@ -53,6 +53,7 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
     protected final TextView slideText;
     protected final ImageView sliderIcon;
     protected final Button button;
+    protected Boolean slideOff;
 
     protected final RelativeLayout mContentRootLayout;
     protected final LinearLayout mContentCenteredContainer;
@@ -111,17 +112,17 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
         this.dpToPixelsScaleFactor = this.context.getResources().getDisplayMetrics().density;
 
         initializeStartingState();
+        slideOff = false;
 
         mRootLayout.setOnTouchListener(new OnSwipeListener(context) {
             @Override
             public void onSwipeLeft() {
+                if(slideOff) return;
                 toggleContent(false);
             }
 
             @Override
-            public void onSwipeRight() {
-                toggleContent(true);
-            }
+            public void onSwipeRight() { toggleContent(true); }
 
         });
 
@@ -217,6 +218,7 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
      * @param prev set true to animate onto previous content page (default is false - animating to next content page)
      */
     protected void toggleContent(boolean prev) {
+
         int oldElementIndex = mActiveElementIndex;
         PaperOnboardingPage newElement = prev ? toggleToPreviousElement() : toggleToNextElement();
 
@@ -506,6 +508,7 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
 
         button.setText(PaperOnboardingPage.getButtonText());
         if(PaperOnboardingPage.getButtonVisibility()==View.VISIBLE){
+            slideOff = true;
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -516,6 +519,7 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
                 }
             }, 600);
         } else {
+            slideOff = false;
             button.setVisibility(PaperOnboardingPage.getButtonVisibility());
         }
 
