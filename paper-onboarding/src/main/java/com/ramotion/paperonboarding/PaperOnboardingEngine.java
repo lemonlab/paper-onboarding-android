@@ -5,7 +5,9 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +15,17 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.ramotion.paperonboarding.listeners.AnimatorEndListener;
 import com.ramotion.paperonboarding.listeners.OnSwipeListener;
 import com.ramotion.paperonboarding.listeners.PaperOnboardingOnChangeListener;
@@ -43,6 +49,10 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
     protected final FrameLayout mContentIconContainer;
     protected final FrameLayout mBackgroundContainer;
     protected final LinearLayout mPagerIconsContainer;
+    protected final ShimmerFrameLayout shimmerFrame;
+    protected final TextView slideText;
+    protected final ImageView sliderIcon;
+    protected final Button button;
 
     protected final RelativeLayout mContentRootLayout;
     protected final LinearLayout mContentCenteredContainer;
@@ -80,10 +90,20 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
         this.context = appContext;
 
         mRootLayout = (RelativeLayout) rootLayout;
-        mContentTextContainer = (FrameLayout) rootLayout.findViewById(R.id.onboardingContentTextContainer);
-        mContentIconContainer = (FrameLayout) rootLayout.findViewById(R.id.onboardingContentIconContainer);
-        mBackgroundContainer = (FrameLayout) rootLayout.findViewById(R.id.onboardingBackgroundContainer);
-        mPagerIconsContainer = (LinearLayout) rootLayout.findViewById(R.id.onboardingPagerIconsContainer);
+        mContentTextContainer = rootLayout.findViewById(R.id.onboardingContentTextContainer);
+        mContentIconContainer = rootLayout.findViewById(R.id.onboardingContentIconContainer);
+        mBackgroundContainer = rootLayout.findViewById(R.id.onboardingBackgroundContainer);
+        mPagerIconsContainer = rootLayout.findViewById(R.id.onboardingPagerIconsContainer);
+        shimmerFrame = rootLayout.findViewById(R.id.shimmer_slide);
+        slideText = rootLayout.findViewById(R.id.tv_slide);
+        sliderIcon = rootLayout.findViewById(R.id.ic_slide);
+
+        button = rootLayout.findViewById(R.id.onboarding_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                toggleContent(false);
+            }
+        });
 
         mContentRootLayout = (RelativeLayout) mRootLayout.getChildAt(1);
         mContentCenteredContainer = (LinearLayout) mContentRootLayout.getChildAt(0);
@@ -184,6 +204,13 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
         mContentIconContainer.addView(initContentIcon);
         // initial bg color
         mRootLayout.setBackgroundColor(activeElement.getBgColor());
+        // animate shimmer textView
+        shimmerFrame.setAngle(ShimmerFrameLayout.MaskAngle.CW_180);
+        shimmerFrame.setBaseAlpha(0.5f);
+        shimmerFrame.setIntensity(0.5f);
+        shimmerFrame.setRepeatDelay(1400);
+        shimmerFrame.startShimmerAnimation();
+
     }
 
     /**
@@ -469,13 +496,34 @@ public class PaperOnboardingEngine implements PaperOnboardingEngineDefaults {
         TextView contentTitle = (TextView) contentTextView.getChildAt(0);
         contentTitle.setText(PaperOnboardingPage.getTitleText());
         contentTitle.setTextColor(PaperOnboardingPage.getTitleColor());
-        contentTitle.setTypeface(PaperOnboardingPage.getTextFont());
         TextView contentText = (TextView) contentTextView.getChildAt(1);
         contentText.setText(PaperOnboardingPage.getDescriptionText());
         contentText.setTextColor(PaperOnboardingPage.getDescriptionColor());
-        contentText.setTypeface(PaperOnboardingPage.getDescriptionFont());
+        contentText.setTypeface(Typeface.SANS_SERIF);
+        slideText.setText(PaperOnboardingPage.getSlideText());
+        shimmerFrame.setVisibility(PaperOnboardingPage.getSliderVisibility());
+        sliderIcon.setVisibility(PaperOnboardingPage.getSliderVisibility());
+
+        button.setText(PaperOnboardingPage.getButtonText());
+        if(PaperOnboardingPage.getButtonVisibility()==View.VISIBLE){
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    button.setVisibility(View.VISIBLE);
+                    Animation startAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_in);
+                    button.startAnimation(startAnimation);
+                }
+            }, 600);
+        } else {
+            button.setVisibility(PaperOnboardingPage.getButtonVisibility());
+        }
+
         return contentTextView;
     }
+
+
+
 
     /**
      * @param PaperOnboardingPage new content page to show

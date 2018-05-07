@@ -1,7 +1,5 @@
 package com.ramotion.paperonboarding;
 
-import android.graphics.Typeface;
-
 import java.io.Serializable;
 
 /**
@@ -9,15 +7,17 @@ import java.io.Serializable;
  */
 public class PaperOnboardingPage implements Serializable {
 
-    private String titleText;
-    private int titleColor;
-    private String descriptionText;
-    private int descriptionColor;
-    private int bgColor;
     private int contentIconRes;
+    private String titleText;
+    private String descriptionText;
+    private String slideText;
+    private String buttonText;
     private int bottomBarIconRes;
-    private Typeface textFont;
-    private Typeface descriptionFont;
+    private int bgColor;
+    private int titleColor;
+    private int descriptionColor;
+    private int  sliderVisibility;
+    private int buttonVisibility;
 
     public PaperOnboardingPage() {
     }
@@ -26,94 +26,70 @@ public class PaperOnboardingPage implements Serializable {
             int contentIconRes,
             String titleText,
             String descriptionText,
+            String slideText,
+            String buttonText,
             int bottomBarIconRes,
             int bgColor,
             int titleColor,
             int descriptionColor,
-            Typeface textFont,
-            Typeface descriptionFont
+            int sliderVisibility,
+            int buttonVisibility
     ) {
         this.contentIconRes = contentIconRes;
         this.titleText = titleText;
         this.descriptionText = descriptionText;
+        this.slideText = slideText;
+        this.buttonText = buttonText;
         this.bottomBarIconRes = bottomBarIconRes;
         this.bgColor = bgColor;
         this.titleColor = titleColor;
         this.descriptionColor = descriptionColor;
-        this.textFont = textFont;
-        this.descriptionFont = descriptionFont;
-    }
-
-    public String getTitleText() {
-        return titleText;
-    }
-
-    public void setTitleText(String titleText) {
-        this.titleText = titleText;
-    }
-
-    public int getTitleColor() {
-        return titleColor;
-    }
-
-    public void setTitleColor(int titleColor) {
-        this.titleColor = titleColor;
-    }
-
-    public int getDescriptionColor() {
-        return descriptionColor;
-    }
-
-    public void setDescriptionColor(int descriptionColor) {
-        this.descriptionColor = descriptionColor;
-    }
-
-    public Typeface getTextFont() {
-        return textFont;
-    }
-
-    public void setTextFont(Typeface textFont) {
-        this.textFont = textFont;
-    }
-
-    public Typeface getDescriptionFont() {
-        return descriptionFont;
-    }
-
-    public void setDescriptionFont(Typeface descriptionFont) {
-        this.descriptionFont = descriptionFont;
-    }
-
-    public String getDescriptionText() {
-        return descriptionText;
-    }
-
-    public void setDescriptionText(String descriptionText) {
-        this.descriptionText = descriptionText;
+        this.sliderVisibility = sliderVisibility;
+        this.buttonVisibility = buttonVisibility;
     }
 
     public int getContentIconRes() {
         return contentIconRes;
     }
 
-    public void setContentIconRes(int contentIconRes) {
-        this.contentIconRes = contentIconRes;
+    public String getTitleText() {
+        return titleText;
+    }
+
+    public String getDescriptionText() {
+        return descriptionText;
+    }
+
+    public String getSlideText() {
+        return slideText;
+    }
+
+    public String getButtonText() {
+        return buttonText;
     }
 
     public int getBottomBarIconRes() {
         return bottomBarIconRes;
     }
 
-    public void setBottomBarIconRes(int bottomBarIconRes) {
-        this.bottomBarIconRes = bottomBarIconRes;
-    }
-
     public int getBgColor() {
         return bgColor;
     }
 
-    public void setBgColor(int bgColor) {
-        this.bgColor = bgColor;
+    public int getTitleColor() {
+        return titleColor;
+    }
+
+    public int getDescriptionColor() {
+        return descriptionColor;
+    }
+
+    public int getSliderVisibility() {
+        return sliderVisibility;
+    }
+
+    public int getButtonVisibility() {
+        return buttonVisibility;
     }
 
     @Override
@@ -145,11 +121,13 @@ public class PaperOnboardingPage implements Serializable {
     @Override
     public String toString() {
         return "PaperOnboardingPage{" +
-                "titleText='" + titleText + '\'' +
+                "contentIconRes=" + contentIconRes +
+                ", titleText='" + titleText  + '\'' +
                 ", descriptionText='" + descriptionText + '\'' +
-                ", bgColor=" + bgColor +
-                ", contentIconRes=" + contentIconRes +
                 ", bottomBarIconRes=" + bottomBarIconRes +
+                ", bgColor=" + bgColor +
+                ", titleColor=" + titleColor +
+                ", descriptionColor=" + descriptionColor +
                 '}';
     }
 }
